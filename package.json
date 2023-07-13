@@ -1,0 +1,65 @@
+{
+  "name": "thunder-client-env-templater",
+  "description": "Creates a thunder client environment file from env template files",
+  "repository": "https://github.com/dkhunt27/thunder-client-env-templater",
+  "private": false,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=14"
+  },
+  "main": "./build/index.js",
+  "files": [
+    "build/lib/**/*",
+    "build/index.*",
+    "build/types/**/*"
+  ],
+  "bin": {
+    "thunder-client-env-templater": "src/bin/thunder-client-env-templater"
+  },
+  "scripts": {
+    "test": "yarn jest",
+    "build": "rimraf build && tsc && tsc-alias",
+    "preversion": "yarn lint && yarn build && yarn test",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && npm run format && git add -A",
+    "postversion": "git push --follow-tags && npm publish",
+    "lint": "eslint --ext ts,js --fix src",
+    "format": "prettier src/**/*.ts -w",
+    "build-live": "tsc -w && tsc-alias -w"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.215.0",
+    "fast-glob": "^3.2.12",
+    "minimist": "^1.2.7",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/jest": "^29.2.3",
+    "@types/mock-fs": "^4.13.1",
+    "@types/node": "^18.11.9",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
+    "babel-jest": "^29.3.1",
+    "conventional-changelog-cli": "^2.1.1",
+    "eslint": "^8.28.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.3.1",
+    "mock-fs": "^5.2.0",
+    "prettier": "^2.3.0",
+    "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.21",
+    "ts-jest": "^29.0.3",
+    "tsc-alias": "^1.7.1",
+    "typescript": "^4.9.3",
+    "yorkie": "^2.0.0"
+  },
+  "gitHooks": {
+    "commit-msg": "yarn commitlint --edit --verbose"
+  }
+}
