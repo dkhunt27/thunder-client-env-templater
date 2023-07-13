@@ -1,14 +1,12 @@
 import fg from 'fast-glob';
 import {
-  appendEnvTemplateToEnvironment,
-  backupThunderClientEnvironmentFile,
+  createEnvTemplateInEnvironmentFolder,
+  backupThunderClientEnvironmentFolder,
   parseConfig,
   processEnvTemplate,
 } from './lib/template';
 import path from 'path';
-import { ProcessedVariablesType } from './types/index.js';
-import { writeFileSync } from 'fs';
-import { displayUsage } from '@/display-usage.js';
+import { displayUsage } from './lib/display-usage';
 
 export const execute = async (args: any): Promise<void> => {
   if (Object.keys(args).length <= 1 || args.help) {
@@ -27,28 +25,26 @@ export const execute = async (args: any): Promise<void> => {
     const envTemplateFiles = await fg(config.templateFiles);
     console.log('... templates to process', envTemplateFiles);
 
-    let tcEnvironment: ProcessedVariablesType[] = [];
+    // backup existing environments folder
+    const envFolderPath = path.join(
+      config.thunderClientEnvironmentFileDir,
+      'environments',
+    );
+    backupThunderClientEnvironmentFolder(envFolderPath);
 
     // loop through them and template
-    for (const templateFile of envTemplateFiles) {
+    for (const [index, templateFile] of envTemplateFiles.entries()) {
       const templated = await processEnvTemplate({
         templateFullPath: templateFile,
         awsRegion: config.awsRegion,
       });
 
-      tcEnvironment = appendEnvTemplateToEnvironment({
+      createEnvTemplateInEnvironmentFolder({
         templated,
-        thunderClientEnvironment: tcEnvironment,
+        config,
+        envFolderPath,
+        index,
       });
     }
-
-    // overwrite environment file
-    const outputPath = path.join(
-      config.thunderClientEnvironmentFileDir,
-      'thunderEnvironment.json',
-    );
-    backupThunderClientEnvironmentFile(outputPath);
-    writeFileSync(outputPath, JSON.stringify(tcEnvironment, null, 2));
-    console.log(` ... creating thunder client environment file: ${outputPath}`);
   }
 };

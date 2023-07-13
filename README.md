@@ -4,17 +4,36 @@ Creating thunder client collections using environments so you can easily switch 
 
 This is where thunder-client-env-templates helps. You save your secrets to SSM and update your env templates to have the ssm path. You can save your templates to the repo. The logic takes the template, looks up any SSM params needed, and then creates the real thunder client environment file with the secret values. Lastly, you use gitignore to ensure that real environment file do not get checked into the repo.
 
+### Version
+
+Thunderclient updated how the environment configuration is saved. Not sure which version made the change, but in 2.9.0 the environment files are saved as separate files in the environments folder. Previously, there was one thunderEnvironments.json file which had all environments.
+
+- Version 2.0.0+ outputs in the new environments folder format
+- Version 1.0.0 outputs in the old single environment file format
+
+### Publishing
+
+When new changes are complete and pass build and test.
+
+- run `yarn version`
+- enter new version number
+- this will build, test, lint, create change log, bump version, create tag, push changes and tag, and finally npm publish
+
 ### Install
 
 - If using yarn, run `yarn add thunder-client-env-templater`
 - If using npm, run `npm install thunder-client-env-templater`
+
+### Run/Test locally
+
+- run `ts-node src/runner.ts`. Will require ts-node installed globally
 
 ### Usage
 
 - Create a thunder client folder (TCF) for you thunder client files (.thunder-client)
 - Create a folder in your TCF for your env templates (.thunder-client/env-templates)
 - Create a json file for each environment that will be templated (.thunder-client/env-templates/env-abc.json)
-- Update the environment file with all the environment variables required. If the variable is not a secret, just add the name/value in plain text (knowing this will be saved to your repo in plain text). If the variable is a secret, save the secret value to SSM and then add the name and ssm path as the value in the environmet template file.
+- Update the environment file with all the environment variables required. If the variable is not a secret, just add the name/value in plain text (knowing this will be saved to your repo in plain text). If the variable is a secret, save the secret value to SSM and then add the name and ssm path as the value in the environment template file.
 
 ```bash
 # env template

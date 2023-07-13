@@ -1,0 +1,18 @@
+{
+  "name": "prod",
+  "data": [
+    {
+      "name": "VAR_A",
+      "value": "prod-var-a"
+    },
+    {
+      "name": "VAR_B",
+      "value": "prod-var-b"
+    }
+  ],
+  "_id": "f4798960-e5f9-4aa9-9262-9544aafb3071",
+  "default": false,
+  "sortNum": 20000,
+  "created": "2023-07-13T19:16:11.080Z",
+  "modified": "2023-07-13T19:16:11.080Z"
+}

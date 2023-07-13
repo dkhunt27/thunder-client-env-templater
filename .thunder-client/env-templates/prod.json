@@ -1,0 +1,13 @@
+{
+  "name": "prod",
+  "data": [
+    {
+      "name": "VAR_A",
+      "value": "prod-var-a"
+    },
+    {
+      "name": "VAR_B",
+      "value": "prod-var-b"
+    }
+  ]
+}

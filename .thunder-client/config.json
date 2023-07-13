@@ -1,0 +1,5 @@
+{
+  "awsRegion": "us-east-2",
+  "thunderClientEnvironmentFileDir": "./.thunder-client/thunder-tests",
+  "templateFiles": ["./.thunder-client/env-templates/*.json"]
+}

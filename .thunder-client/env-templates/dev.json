@@ -1,0 +1,13 @@
+{
+  "name": "dev",
+  "data": [
+    {
+      "name": "VAR_A",
+      "value": "dev-var-a"
+    },
+    {
+      "name": "VAR_B",
+      "value": "dev-var-b"
+    }
+  ]
+}
