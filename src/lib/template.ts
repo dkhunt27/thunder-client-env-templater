@@ -4,10 +4,17 @@ import {
   TemplateVariablesType,
 } from '../types/index';
 import { SSMClientConfig } from '@aws-sdk/client-ssm';
-import { existsSync, readFileSync, renameSync } from 'fs';
 import { processSsmInstruction } from './process-ssm-instruction';
 import { v4 as uuidv4 } from 'uuid';
-import { setupAwsConfig } from './setup-aws-config.js';
+import { setupAwsConfig } from './setup-aws-config';
+import path from 'path';
+import {
+  writeFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+} from 'fs';
 
 export const assertFileExists = (filePath: string) => {
   if (!existsSync(filePath)) {
@@ -31,7 +38,8 @@ export const parseFileAsJson = (filePath: string): Record<string, unknown> => {
   }
 };
 
-export const appendEnvTemplateToEnvironment = (params: {
+// this is for the old thunder client version which had 1 env file
+export const appendEnvTemplateToEnvironmentJson = (params: {
   templated: TemplateVariablesType;
   thunderClientEnvironment: ProcessedVariablesType[];
 }): ProcessedVariablesType[] => {
@@ -49,6 +57,39 @@ export const appendEnvTemplateToEnvironment = (params: {
   params.thunderClientEnvironment.push(processed);
 
   return params.thunderClientEnvironment;
+};
+
+// this is for the new thunder client version which has multiple env file
+export const createEnvTemplateInEnvironmentFolder = (params: {
+  templated: TemplateVariablesType;
+  config: ConfigType;
+  envFolderPath: string;
+  index: number;
+}): void => {
+  console.log(` ... creating env template: ${params.templated.name}`);
+
+  const processed: ProcessedVariablesType = {
+    ...params.templated,
+    _id: uuidv4(),
+    default: params.index === 0,
+    sortNum: 10000 * (params.index + 1),
+    created: new Date().toISOString(),
+    modified: new Date().toISOString(),
+  };
+
+  const outputPath = path.join(
+    params.envFolderPath,
+    `tc_env_${processed.name}.json`,
+  );
+
+  if (!existsSync(params.envFolderPath)) {
+    mkdirSync(params.envFolderPath, { recursive: true });
+  }
+
+  writeFileSync(outputPath, JSON.stringify(processed, null, 2));
+  console.log(` ... creating thunder client environment file: ${outputPath}`);
+
+  return;
 };
 
 export const processEnvTemplate = async (params: {
@@ -111,6 +152,7 @@ export const template = async (params: {
   return templated;
 };
 
+// this is for the old thunder client version which had 1 env file
 export const backupThunderClientEnvironmentFile = (filePath: string) => {
   if (existsSync(filePath)) {
     console.log(
@@ -120,6 +162,16 @@ export const backupThunderClientEnvironmentFile = (filePath: string) => {
       filePath,
       filePath.replace('.json', `.backup.${Date.now()}.json`),
     );
+  }
+};
+
+// this is for the new thunder client version which has multiple env file
+export const backupThunderClientEnvironmentFolder = (filePath: string) => {
+  if (existsSync(filePath)) {
+    console.log(
+      ` ... backing up existing thunder client environments folder: ${filePath}`,
+    );
+    renameSync(filePath, `${filePath}-backup-${Date.now()}`);
   }
 };
 

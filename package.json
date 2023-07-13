@@ -3,7 +3,7 @@
   "description": "Creates a thunder client environment file from env template files",
   "repository": "https://github.com/dkhunt27/thunder-client-env-templater",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.9.1",
   "engines": {
     "node": ">=14"
   },

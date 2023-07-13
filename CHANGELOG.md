@@ -1,4 +1,8 @@
-# 1.0.0 (2023-07-13)
+## [1.9.1](https://github.com/dkhunt27/thunder-client-env-templater/compare/v1.0.0...v1.9.1) (2023-07-13)
+
+
+
+# [1.0.0](https://github.com/dkhunt27/thunder-client-env-templater/compare/430597d5d209219c95476f2deb1789cecca6daba...v1.0.0) (2023-07-13)
 
 
 ### Features
