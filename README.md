@@ -80,12 +80,10 @@ When new changes are complete and pass build and test.
 - Update .gitignore and add the outputted thunder-client environment file/folder so it doesn't get checked into your repo.
 
 ```bash
-#.gitignore
-
-# thunderclient ignores
+# .thunder-client/.gitignore
 thunderEnvironment*.json
 environments-backup*/
-environments/*.json
+tc_env_*.json
 thunderActivity.json
 ```
 
