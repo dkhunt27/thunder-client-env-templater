@@ -6,10 +6,10 @@ This is where thunder-client-env-templates helps. You save your secrets to SSM a
 
 ### Version
 
-Thunderclient updated how the environment configuration is saved. Not sure which version made the change, but in 2.9.0 the environment files are saved as separate files in the environments folder. Previously, there was one thunderEnvironments.json file which had all environments.
+Thunder client updated how the environment configuration is saved. Not sure which TC version made the change assuming it was 2.7 or 2.8, but the environment files are saved as separate files in the environments folder. Previously, there was one thunderEnvironments.json file which had all environments.
 
-- Version 2.0.0+ outputs in the new environments folder format
-- Version 1.0.0 outputs in the old single environment file format
+- Version 2.0.0+ outputs in the new environments folder format (assuming TC version post 2.7)
+- Version 1.0.0 outputs in the old single environment file format (assuming TC version pre 2.7)
 
 ### Publishing
 
@@ -45,7 +45,7 @@ When new changes are complete and pass build and test.
       "value": "https://dev-api.projecta.com/api"
     },
     {
-      "name": "4TEMPLATER:username",
+      "name": "4TEMPLATER:username", # use 4TEMPLATER: to identify this is one for the templates to process
       "value": "ssm:/projectA/dev/username:false",  #:true means it is encrypted ssm value; :false means it is not encrypted
     },
     {
@@ -55,14 +55,64 @@ When new changes are complete and pass build and test.
   ]
 }
 
+
+# outputted to environment file or folder
+{
+  "name": "[dev or test or prod etc]",
+  "data": [
+    {
+      "name": "baseUrl",
+      "value": "https://dev-api.projecta.com/api"
+    },
+    {
+      "name": "username",
+      "value": "[the value in ssm at path /projectA/dev/username]",
+    },
+    {
+      "key": "password",
+      "value": "[the value in ssm at path /projectA/dev/password decrypted]"
+    }
+  ]
+}
+
 ```
 
-- Update .gitignore and add your final thunder-client environment file so it doesn't get checked into your repo. `thunder-tests/thunderEnvironment.json` is the path default for thunder client
+- Update .gitignore and add the outputted thunder-client environment file/folder so it doesn't get checked into your repo.
 
 ```bash
 #.gitignore
-.thunder-client/thunder-tests/thunderEnvironment.json
+
+# thunderclient ignores
+thunderEnvironment*.json
+environments-backup*/
+environments/*.json
+thunderActivity.json
 ```
 
-- Create thunder-client config
+- Create thunder-client config to ease the templater execution
+
+```bash
+# .thunder-client/config.json
+# project setup to put all thunder client files in .thunder-client folder
+{
+  "awsRegion": "us-east-2",
+  "thunderClientEnvironmentFileDir": "./.thunder-client/thunder-tests",
+  "templateFiles": ["./.thunder-client/env-templates/*.json"]
+}
+```
+
 - Add script to your package.json
+
+```bash
+{
+  ...
+  "scripts": {
+    ...
+      "tc:template": "yarn thunder-client-env-templater --config ./.thunder-client/config.json",
+    ...
+  }
+  ...
+}
+```
+
+- Run `yarn tc:template` when needed to create/update thunder client environment file/folder. If using ssm, make sure to update ~/.aws/credentials before
