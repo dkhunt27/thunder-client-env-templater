@@ -1,6 +1,8 @@
 export type TemplateVariablesType = {
   name: string;
   data: VariableType[];
+  default?: boolean;
+  sortNum?: number;
 };
 
 export type ProcessedVariablesType = {

@@ -68,11 +68,21 @@ export const createEnvTemplateInEnvironmentFolder = (params: {
 }): void => {
   console.log(` ... creating env template: ${params.templated.name}`);
 
+  let defaultVal = params.index === 0;
+  if (params.templated.default !== undefined) {
+    defaultVal = params.templated.default;
+  }
+
+  let sortNum = 10000 * (params.index + 1);
+  if (params.templated.sortNum !== undefined) {
+    sortNum = params.templated.sortNum;
+  }
+
   const processed: ProcessedVariablesType = {
     ...params.templated,
     _id: uuidv4(),
-    default: params.index === 0,
-    sortNum: 10000 * (params.index + 1),
+    default: defaultVal,
+    sortNum: sortNum,
     created: new Date().toISOString(),
     modified: new Date().toISOString(),
   };

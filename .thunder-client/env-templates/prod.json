@@ -9,5 +9,7 @@
       "name": "VAR_B",
       "value": "prod-var-b"
     }
-  ]
+  ],
+  "default": true,
+  "sortNum": 2000
 }

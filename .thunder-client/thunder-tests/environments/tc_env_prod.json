@@ -10,9 +10,9 @@
       "value": "prod-var-b"
     }
   ],
-  "_id": "f4798960-e5f9-4aa9-9262-9544aafb3071",
-  "default": false,
-  "sortNum": 20000,
-  "created": "2023-07-13T19:16:11.080Z",
-  "modified": "2023-07-13T19:16:11.080Z"
+  "default": true,
+  "sortNum": 2000,
+  "_id": "e6679601-bcc5-41cd-a520-b94db1efaf36",
+  "created": "2024-04-08T15:14:31.489Z",
+  "modified": "2024-04-08T15:14:31.489Z"
 }

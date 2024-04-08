@@ -26,7 +26,7 @@ When new changes are complete and pass build and test.
 
 ### Run/Test locally
 
-- run `ts-node src/runner.ts`. Will require ts-node installed globally
+- run `npx ts-node src/runner.ts` like `npx ts-node src/runner.ts --config=./.thunder-client/config.json`
 
 ### Usage
 

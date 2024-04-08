@@ -33,11 +33,36 @@ export const execute = async (args: any): Promise<void> => {
     backupThunderClientEnvironmentFolder(envFolderPath);
 
     // loop through them and template
+    let defaultTrueAlready = false;
+    const sortNumList: number[] = [];
     for (const [index, templateFile] of envTemplateFiles.entries()) {
       const templated = await processEnvTemplate({
         templateFullPath: templateFile,
         awsRegion: config.awsRegion,
       });
+
+      // ensure only one env template has default set to true
+      if (templated.default) {
+        if (defaultTrueAlready) {
+          throw new Error(
+            `Only one env-template can have default set to true: ${templateFile}`,
+          );
+        }
+        defaultTrueAlready = true;
+        console.log(
+          ` ... env-template with default set to true: ${templateFile}`,
+        );
+      }
+
+      // ensure unique sort numbers in env templates
+      if (templated.sortNum) {
+        if (sortNumList.includes(templated.sortNum)) {
+          throw new Error(
+            `Sort number ${templated.sortNum} must be unique: ${templateFile}`,
+          );
+        }
+        sortNumList.push(templated.sortNum);
+      }
 
       createEnvTemplateInEnvironmentFolder({
         templated,
